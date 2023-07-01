@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Blood Bank</title>
+    <link rel="icon" href="./static/images/giphy.gif">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./static/css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="./static/css/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <!--===============================================================================================-->
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="./static/css/utils.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="./static/css/login.css">
+    <link rel="stylesheet" href="./static/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/animate.css">
+
+    <link rel="stylesheet" href="./static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="./static/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="./static/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="./static/css/aos.css">
+
+    <link rel="stylesheet" href="./static/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="./static/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="./static/css/jquery.timepicker.css">
+
+
+    <link rel="stylesheet" href="./static/css/flaticon.css">
+    <link rel="stylesheet" href="./static/css/icomoon.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="stylesheet" href="./static/css/register.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/"> Blood Bank <i class="icon-heart" aria-hidden="true"></i></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="oi oi-menu"></span> Menu
+      </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="/" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="posts.html" class="nav-link">Posts</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+		            <li class="nav-item"><a href="profile" class="nav-link"><span>Profile</span></a></li>
+                    <li class="nav-item"><a href="login" class="nav-link"><span>Login</span></a></li>
+                    <li class="nav-item cta"><a href="register" class="nav-link"><span>Sign up</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    <div class="hero-wrap js-fullheight">
+        <div class="overlay"></div>
+        <div id="particles-js"></div>
+        <div class="py-3 wrap-login100 pcontainInnerHoriz">
+            {% if message %}
+          <strong style="color: red; margin:auto auto;">Error! {{message}}</strong> 
+            {% endif %}
+
+
+
+            <form  method="POST" action="{{ url_for('register')}}"   class="login100-form validate-form">
+                <!--Title-->
+                <span class="login100-form-title pb-2 pt-2">
+					Sign Up
+                </span>
+                <div id="personalPage">
+                    <div class="numberPage text-center">
+                        <span>1</span>
+                    </div>
+                    <label class="pt-4 pb-3 infoType">Personal Information
+                </label>
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+                            <label class="container">First Name
+                        </label>
+                            <div class="wrap-input100 mb-2">
+                                <!-- imput first name -->
+                                <input class="input100" type="text" name="first_name">
+                                <span class="focus-input100"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="container">Last Name
+                        </label>
+                            <div class="wrap-input100 mb-2">
+                                 <!-- imput Last name -->
+                                <input class="input100" type="text" name="last_name">
+                                <span class="focus-input100"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class=col-md-6>
+                            <label class="container">Age
+                            </label>
+                                <div class="wrap-input100 mb-2">
+                                    <!-- imput Age name -->
+                                    <input class="input100" type="number" name="age">
+                                    <span class="focus-input100"></span>
+                                </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div>
+                                <label>City / Town
+                            </label>
+                                    <div class="wrap-input100 mb-2">
+                                        <!-- imput Age name -->
+                                        <input  autocomplete="off" class="input100" type="text" name="location">
+                                        <span class="focus-input100"></span>
+                                    </div>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Login Button-->
+                    <div class="mt-5 text-center">
+                        <span class="nextBtn" onclick="goContactPage()">
+						Next
+                    </span>
+                    </div>
+                </div>
+                <div id="contactPage">
+                    <div class="numberPage text-center">
+                        <span>2</span>
+                    </div>
+                    <label class="pt-4 pb-3 infoType">Contact Information
+                    </label>
+
+                    <label class="container">Email
+                            </label>
+                    <div class="wrap-input100 mb-2">
+                        <!-- imput email addres -->
+                        <input class="input100" type="email" name="email" >
+                        <span class="focus-input100"></span>
+                    </div>
+                    <label class="container">Phone
+                            </label>
+                    <div class="wrap-input100 mb-2">
+                        <!-- imput phone number -->
+                        <input class="input100" type="number" name="phone_number">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <label class="container">Address
+                            </label>
+                    <div class="wrap-input100 mb-2">
+                         <!-- imput Adresss -->
+                        <input class="input100" type="text" name="address">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="mt-5 text-center">
+                        <span class="nextBtn" onclick="goAccountPage()">
+                                    Next
+                                </span>
+                    </div>
+                </div>
+                <div id="accountPage">
+                    <div class="numberPage text-center">
+                        <span>3</span>
+                    </div>
+                    <label class="pt-4 pb-3 infoType">Account Information
+                    </label>
+                    <label class="container">Username
+                    </label>
+                    <div class="wrap-input100 mb-2">
+                        <!-- important !!! username -->
+                        <input class="input100" type="text" name="username">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <label class="container">Password
+                    </label>
+                    <div class="wrap-input100 mb-2">
+                         <!-- important !!! password -->
+                        <input class="input100" type="password" name="password">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <label class="container">Rewrite password
+                    </label>
+                    <div class="wrap-input100 mb-2">
+                        <!-- important !!!confirm  password -->
+                        <input class="input100" type="password" name="confirm_password">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <!--Login Button-->
+                    <div class="mt-5 text-center">
+                        <span class="nextBtn" onclick="goMedicalPage()">
+                            Next
+                        </span>
+                    </div>
+                </div>
+
+                <div id="medicalPage">
+                    <div class="numberPage text-center">
+                        <span>4</span>
+                    </div>
+                    <label class="pt-4 pb-3 infoType">Medical Information
+                    </label>
+                    <div class="container">
+                        <label>Choose your gender:
+                    </label>
+                        <div class="wrap-input100 mb-2">
+                            <div>
+                                <input type="radio" name="gender" id="male" value="male">
+                                <label for="male">Male</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="gender" id="female" value="female">
+                                <label for="female">Female</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="gender" id="others" value="others">
+                                <label for="others">Others</label>
+                            </div>
+                        </div> 
+                    </div> 
+                     <div class="container">
+                        <label>Blood type:  </label>
+
+                     <select id="bloodType" class="d-block" name="blood" type="submit">
+                        <option value="B">Choose one</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                      </select>
+    
+                    </div> 
+                    <!--Login Button-->
+                    <div class="container-login100-form-btn pt-3" >
+                        <button type="submit" class="login100-form-btn btn">Create Account</button>
+                        <!-- <a class="login100-form-btn btn" href="login">
+                       Account
+                       </a> -->
+                    </div>
+
+                </div>
+        </div>
+
+        <!--Login Button-->
+    </div>
+    <!--End Login Button-->
+    </form>
+    </div>
+    </div>
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+    <script src="./static/js/jquery.min.js"></script>
+    <script src="./static/js/jquery-3.2.1.min.js"></script>
+    <script src="./static/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="./static/js/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+    <script src="./static/js/jquery.easing.1.3.js"></script>
+    <script src="./static/js/jquery.waypoints.min.js"></script>
+    <script src="./static/js/jquery.stellar.min.js"></script>
+    <script src="./static/js/owl.carousel.min.js"></script>
+    <script src="./static/js/jquery.magnific-popup.min.js"></script>
+    <script src="./static/js/aos.js"></script>
+    <script src="./static/js/jquery.animateNumber.min.js"></script>
+    <script src="./static/js/bootstrap-datepicker.js"></script>
+    <script src="./static/js/jquery.timepicker.min.js"></script>
+    <script src="./static/js/particles.min.js"></script>
+    <script src="./static/js/particle.js"></script>
+    <script src="./static/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="./static/js/google-map.js"></script>
+    <script src="./static/js/main.js"></script>
+    <script src="./static/js/login.js"></script>
+
+</body>
+
+</html>
