@@ -19,9 +19,9 @@ You may also see any lint errors in the console.
 
 
 ## Project Image
-<img width="1266" alt=" " src="https://github.com/Niraj-Kumar-Gupta/Blood-Bank/blob/main/screenshoot/firstpage.png">
-<img width="1266" alt=" " src="https://github.com/Niraj-Kumar-Gupta/Blood-Bank/blob/main/screenshoot/basepage.png">
-<img width="1266" alt=" " src="https://github.com/Niraj-Kumar-Gupta/Blood-Bank/blob/main/screenshoot/login.png">
+<img width="1266" alt=" " src="https://github.com/Niraj-Kumar-Gupta/Blood-Bank/blob/main/screenshots/firstpage.png">
+<img width="1266" alt=" " src="https://github.com/Niraj-Kumar-Gupta/Blood-Bank/blob/main/screenshots/basepage.png">
+<img width="1266" alt=" " src="https://github.com/Niraj-Kumar-Gupta/Blood-Bank/blob/main/screenshots/login.png">
 
 
 ## Contributors:
