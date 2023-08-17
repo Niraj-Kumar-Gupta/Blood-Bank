@@ -47,10 +47,54 @@ class user(UserMixin,db.Model):
          return self.sno
         
 
-# home route that returns below text when root url is accessed
-# @app.route("/")
-# def home():
-#     return render_template("index.html")
+class newsletter(db.Model):
+        sno = db.Column(db.Integer,primary_key=True)
+        newsletter_email = db.Column(db.String(100),nullable=False)
+        date_created = db.Column(db.DateTime, default=datetime.now)
+     
+     
+
+class blood_donate(db.Model):
+        sno = db.Column(db.Integer, primary_key=True)
+        first_name = db.Column(db.String(50), nullable=False)
+        last_name = db.Column(db.String(50), nullable=False)
+        blood = db.Column(db.String(100),nullable=False)
+        dob = db.Column(db.String(100), nullable=False)
+        email = db.Column(db.String(100), nullable=False)
+        number = db.Column(db.Integer(),nullable=False)
+        location = db.Column(db.String(50), nullable=False)
+        date_created = db.Column(db.DateTime, default=datetime.now)
+
+
+        def get_id(self):
+         return self.sno
+
+
+class blood_request(db.Model): 
+    sno = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    blood = db.Column(db.String(100),nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    number = db.Column(db.Integer(),nullable=False)
+    location = db.Column(db.String(50), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.now)
+
+    def get_id(self):
+         return self.sno   
+
+class contact_form(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50),nullable=False)
+    email = db.Column(db.String(100),nullable=False , unique=True)
+    subject= db.Column(db.String(200),nullable=False)
+    message = db.Column(db.String(500),nullable=False)
+
+    def get_id(self):
+         return self.sno 
+
+
+
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -124,10 +168,8 @@ def login():
 @app.route("/profile")
 def profile(message=None):
     user= load_user(current_user.get_id())
-    if user:
-        return render_template('profile.html',usr=user)
-    else:
-        return render_template('login.html',usr=False,message="Login Required !!")
+    return render_template('profile.html',usr=user)
+   
 
 #profile section ##
 
@@ -145,6 +187,10 @@ def logout():
     # Admin
 admin = Admin(app, name="data base", template_mode='bootstrap3')
 admin.add_view(ModelView(user, db.session))
+admin.add_view(ModelView(blood_donate, db.session))
+admin.add_view(ModelView(blood_request, db.session))
+admin.add_view(ModelView(newsletter, db.session))
+admin.add_view(ModelView(contact_form, db.session))
 
     # Admin
     # Admin
@@ -178,13 +224,24 @@ def about():
     else:
         return render_template('about.html',usr=False)
 
-@app.route('/contact')
-def contact():
-    user= load_user(current_user.get_id())
-    if user:
-        return render_template('contact.html',usr=user)
-    else:
-        return render_template('contact.html',usr=False)
+### Contact section start##
+@app.route('/contact',methods=['GET','POST'])
+def contact_section():
+    if request.method=="POST":
+        name = request.form['name']
+        email=request.form['email']
+        subject=request.form['subject']
+        message=request.form['message']
+        
+        cont=contact_form(name=name,email=email,subject=subject,message=message)
+        db.session.add(cont)
+        db.session.commit()
+        return render_template("contact.html",message="sucessfully sent !!!")
+
+    return render_template("contact.html")   
+
+
+    
     
 
 # smtp mail protocol to send message #
@@ -194,10 +251,78 @@ def contact():
 def news_letter():
      if request.method == "POST":
          newsletter_email = request.form['newsletter_email']
+         news=newsletter(newsletter_email=newsletter_email)
+         db.session.add(news)  # adding user if not exists
+         db.session.commit()
          return render_template("index.html",message=("congratulation !!" +" "+newsletter_email + " " +" is sucessfully Registered"))
      return render_template("index.html",message="Login Required")
 
-# smtp mail protocol to send message #
+###request blood
+@app.route('/request')
+def request_b():
+    user= load_user(current_user.get_id())
+    if user:
+      return render_template("request_blood.html",exist=False,accept=False,usr=user)
+    else:
+      return render_template("login.html",message="login required !!")
+
+
+@login_required
+@app.route("/request", methods=['GET','POST'])
+def blood_request1():
+     
+   user= load_user(current_user.get_id())
+   if user:
+        if request.method == "POST": 
+                first_name = request.form['first_name']
+                last_name =  request.form['last_name']
+                blood = request.form['blood']
+                email = request.form['email']
+                number = request.form['number']
+                location = request.form['location']
+                req = blood_request(first_name=first_name,last_name=last_name,blood=blood,
+                        email=email,number=number,location=location)
+                db.session.add(req)  # adding user if not exists
+                db.session.commit()
+                return render_template("request_blood.html",usr=user,exist=True,accept=False)
+    
+        return render_template("request_blood.html",usr=user,exist=True,accept=True)
+
+
+
+#### donate blood 
+@app.route('/donate')
+def donate():
+   user= load_user(current_user.get_id())
+   if user:
+      return render_template("donate.html",exist=False,accept=False,usr=user)
+   else:
+      return render_template("login.html",message="login required !!")
+
+@login_required
+@app.route("/donate", methods=['GET','POST'])
+def donate_blood():
+   user= load_user(current_user.get_id())
+   if user:
+        if request.method == "POST": 
+                first_name = request.form['first_name']
+                last_name =  request.form['last_name']
+                blood = request.form['blood']
+                dob = request.form['dob']
+                email = request.form['email']
+                number = request.form['number']
+                location = request.form['location']
+
+                donate = blood_donate(first_name=first_name,last_name=last_name,blood=blood,dob=dob,
+                        email=email,number=number,location=location)
+                db.session.add(donate)  # adding user if not exists
+                db.session.commit()
+                return render_template("donate.html",usr=user,exist=True,accept=False)
+            
+        return render_template("donate.html",usr=user,exist=False,accept=False)
+ 
+   
+
 
 if __name__ == '__main__': 
    app.run(debug=False,host="0.0.0.0",port="8000")
