@@ -262,7 +262,11 @@ def news_letter():
 def request_b():
     user= load_user(current_user.get_id())
     if user:
-      return render_template("request_blood.html",exist=False,accept=False,usr=user)
+        req = blood_request.query.filter_by( first_name=user.first_name,email=user.email ).first()
+        if req:
+            return render_template("request_blood.html",exist=True,accept=False,usr=user)
+        else:
+            return render_template("request_blood.html",exist=False,usr=user)
     else:
       return render_template("login.html",message="login required !!")
 
@@ -284,10 +288,11 @@ def blood_request1():
                         email=email,number=number,location=location)
                 db.session.add(req)  # adding user if not exists
                 db.session.commit()
-                return render_template("request_blood.html",usr=user,exist=True,accept=False)
+                req = blood_request.query.filter_by( first_name=first_name,email=email).first()
+                if req:
+                 return redirect("/request")
     
-        return render_template("request_blood.html",usr=user,exist=True,accept=True)
-
+        
 
 
 #### donate blood 
@@ -295,7 +300,11 @@ def blood_request1():
 def donate():
    user= load_user(current_user.get_id())
    if user:
-      return render_template("donate.html",exist=False,accept=False,usr=user)
+        req = blood_donate.query.filter_by( first_name=user.first_name,email=user.email ).first()
+        if req:
+            return render_template("donate.html",exist=True,accept=False,usr=user)
+        else:
+            return render_template("donate.html",exist=False,usr=user)
    else:
       return render_template("login.html",message="login required !!")
 
@@ -317,9 +326,10 @@ def donate_blood():
                         email=email,number=number,location=location)
                 db.session.add(donate)  # adding user if not exists
                 db.session.commit()
-                return render_template("donate.html",usr=user,exist=True,accept=False)
-            
-        return render_template("donate.html",usr=user,exist=False,accept=False)
+                req = blood_donate.query.filter_by( first_name=first_name,email=email).first()
+                if req:
+                 return redirect("/donate")
+        
  
    
 
