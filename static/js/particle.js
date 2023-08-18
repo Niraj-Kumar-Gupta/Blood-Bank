@@ -21,7 +21,7 @@ particlesJS("particles-js", {
                 "nb_sides": 5
             },
             "image": {
-                "src": "img/github.svg",
+                
                 "width": 100,
                 "height": 100
             }
@@ -56,7 +56,7 @@ particlesJS("particles-js", {
         "move": {
             "enable": true,
             "speed": 6,
-            "direction": "left",
+            "direction": "bottom",
             "random": false,
             "straight": false,
             "out_mode": "out",

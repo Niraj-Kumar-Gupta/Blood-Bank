@@ -301,3 +301,31 @@
       myModal.show();
     });
  
+
+	function myFunction() {
+
+		var btn = document.getElementById("myButton");
+
+		if (btn.innerHTML == "Donate") {
+			btn.innerHTML = "Close";
+		}
+		else {
+			btn.innerHTML = "Donate";
+		}
+
+	   }
+
+
+        $( ".change" ).on("click", function() {
+            if( $( "body" ).hasClass( "dark" ) )
+             {
+                 $( "body" ).removeClass( "dark" );
+		
+            } else {
+                $( "body" ).addClass( "dark" );
+				
+  
+            }
+        });
+
+	   
