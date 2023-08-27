@@ -304,7 +304,7 @@ def donate():
         if req:
             return render_template("donate.html",exist=True,accept=False,usr=user)
         else:
-            return render_template("donate.html",exist=False,usr=user)
+            return render_template("donate.html",exist=True,accept=True,usr=user)
    else:
       return render_template("login.html",message="login required !!")
 
@@ -335,4 +335,4 @@ def donate_blood():
 
 
 if __name__ == '__main__': 
-   app.run(debug=False,host="0.0.0.0")
+   app.run(debug=True,host="0.0.0.0",port=8000)
