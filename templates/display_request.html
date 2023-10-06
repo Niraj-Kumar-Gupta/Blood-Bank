@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>blood request list</title>
+</head>
+<body style="background-color: aliceblue;">
+
+    <div  class="container mt-3"> 
+        
+            <div class="card-body">
+              
+              <button type="click" onclick="document.getElementById('receiverlist').style.display = 'block'" class="btn btn-success">Blood Request</button>
+              <button type="click" onclick="document.getElementById('receiverlist').style.display = 'none'" class="btn btn-danger">close</button>
+            </div>
+          </div>
+
+  </div>
+
+
+
+<div class="container mt-3" id="receiverlist">
+    <h1>Blood Request Records</h1>
+ 
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Blood Type</th>
+            <th>Email</th>
+            <th>Contact Number</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>View</th>
+        </tr>
+
+        {% for record in blood_request_records %}
+            <tr>
+                <td>{{ record.first_name }}</td>
+                <td>{{ record.last_name }}</td>
+                <td>{{ record.blood }}</td>
+              
+                <td>{{ record.email }}</td>
+                <td>{{ record.number }}</td>
+                <td>{{ record.location }}</td>
+                {% if record.flag %}
+                <td style="color: rgb(20, 146, 68);">accepted</td>
+
+               <td><button type="submit" class="btn btn-success" onclick="fetchDonorData('{{ record.sno }}','{{ record.blood }}')" data-bs-toggle="modal" data-bs-target="#myModal1" >Details</button></td>
+              
+             
+              <!-- <form action="/details_send/{{ record.sno }}" method="POST"> -->
+                 
+                <!-- create a pop window -->
+                
+                <!-- The Modal -->
+                  <div class="modal" id="myModal1" >
+                    <div class="modal-dialog modal-dialog-centered" style="min-width: 900px;">
+                      <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                          <h4 class="modal-title">Search List of <strong style="color: rgb(119, 7, 7);">{{record.blood}} Blood Doners</strong></h4>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                          
+                          <div id="display-area"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+               
+                
+              <!-- </form>  -->
+                
+
+              {% else %}
+              <td></td>
+              <form action="/accept_request_receiver/{{ record.sno }}" method="POST">
+                  <td><button type="submit" class="btn btn-success">Accept</button></td>
+              </form>
+              <form action="/delete_request_receiver/{{ record.sno }}" method="POST">
+                  <td><button type="submit" class="btn btn-danger">Decline</button></td>
+              </form>
+              
+             {%endif%}
+          </tr>
+      {% endfor %}
+      </thead>
+  </table>
+</div>
+
+
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+<div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header" >
+    <strong class="me-auto">Blood Bank</strong>
+    <small>1 sec ago</small>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    Sucessfully Loaded !!
+  </div>
+</div>
+</div>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Simulate a delay (e.g., 2000 milliseconds) before showing the toast
+  setTimeout(function() {
+    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+    toast.show();
+  }, 000);  // Change the delay as needed (in milliseconds)
+});
+</script>
+
+
+<script>
+ function fetchDonorData(donar_id,blood) {
+  const displayArea = document.getElementById('display-area');
+
+  // Send an AJAX request to the server
+  fetch(`/display_request/${blood}`)
+      .then(response => response.json())
+      .then(data => {
+          // Process the data received from the server
+          console.log('Received data:', data);
+
+          // Clear any previous content
+          displayArea.innerHTML = '';
+           
+          
+          // Create a form for all radio buttons
+          const form = document.createElement('form');
+          form.action = `/details_send1/${donar_id}`;
+          form.method = 'POST';// Set the form action
+           
+          
+        
+
+          // Create radio buttons for each item and append to the form
+          data.forEach(item => {
+              const label = document.createElement('label');
+              label.classList.add('shadow', 'p-3', 'mb-2', 'bg-body', 'rounded', 'w-100');
+
+              label.innerHTML = ` 
+                  <input type="radio" name="select_request_1" value='${JSON.stringify(item.sno)}'>&nbsp
+                   <table class="table table-hover">
+                    <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Full Name</th>
+                          <th>Blood Type</th>
+                          <th>Address</th>
+                          <th>Contact Number</th>
+                          <th>email</th>
+                          
+                     </tr>
+                    <tr>
+                        <th>${item.sno}</th>
+                        <th>${item.first_name} ${item.last_name}</th>
+                        <th>${item.blood}</th>
+                        <th>${item.location}</th>
+                        <th>${item.number}</th>
+                        <th>${item.email}</th>
+                    </tr>
+                  </thead>
+                  </table>
+              `;
+
+              form.appendChild(label);
+              form.appendChild(document.createElement('br'));  // Add a line break for spacing
+          });
+
+          // Create a single submit button for the form
+          const submitButton = document.createElement('button');
+          submitButton.type = 'submit';
+          submitButton.className = 'btn btn-success';
+          submitButton.textContent = 'Submit';
+          
+
+          // Append the submit button to the form
+          form.appendChild(submitButton);
+
+          // Append the form to the display area
+          displayArea.appendChild(form);
+      })
+      .catch(error => console.error('Error fetching donor data:', error));
+}
+
+
+
+
+
+</script>
+
+</body>
+</html>

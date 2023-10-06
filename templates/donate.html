@@ -152,7 +152,17 @@
                               <h4 style="color: rgb(190, 37, 14); padding-bottom: 5px;">Congratulation !!</h4>
                                <div class="alert alert-success">
                                 <strong>Success!</strong> Your request has been Approved.<a href="#" class="alert-link">You are eligible for blood donation !!</a>.
+         
                               </div>
+                              <div >
+                                <h3>Blood Receiver Contact details</h3>
+                                {% if details%}
+                                <h4>{{details.first_name}}</h4>
+                                <h4>{{details.location}}</h4>
+                                {% else %}
+                                <h4> update soon !!</h4>
+                                {%endif%}
+                            </div>
                               {% else %}
                               <h4 style="color: rgb(195, 20, 20); padding-bottom: 5px;">You have already submitted this response.</h4>
                               <div class="alert alert-danger">
