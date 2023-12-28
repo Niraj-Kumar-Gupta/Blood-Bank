@@ -29,7 +29,6 @@ You may also see any lint errors in the console.
 1.[ Niraj Kumar Gupta](https://github.com/Niraj-Kumar-Gupta/)\
 2.[ Roshni Mandal](https://github.com/Roshni-Mandal/)\
 3.  Ravi Kumar Shah\
-4.  Shaily Rani
 
 
 ## Project link:
