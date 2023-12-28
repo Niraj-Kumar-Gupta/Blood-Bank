@@ -147,9 +147,13 @@
                             </label>
                     <div class="wrap-input100 mb-2">
                         <!-- imput email addres -->
-                        <input class="input100" type="email" name="email" >
+                        <input class="input100" type="email" name="email"  id="email">
+                        
                         <span class="focus-input100"></span>
+                       
                     </div>
+                    <p id="result"></p>
+
                     <label class="container">Phone
                             </label>
                     <div class="wrap-input100 mb-2">
@@ -287,6 +291,38 @@
     <script src="./static/js/google-map.js"></script>
     <script src="./static/js/main.js"></script>
     <script src="./static/js/login.js"></script>
+
+
+    <script>
+             const emailInput=document.querySelector('#email');
+             const resultElement = document.getElementById('result');
+             emailInput.addEventListener('input',()=>{
+
+                const email = emailInput.value;
+                // ---- fetch syntx ---
+                // fetch( 'req', {res}.then(response => response.json()).then(data => {...}) )
+
+                fetch('/check-email',{
+                    method: 'POST',
+                    body: new URLSearchParams({ email }),
+                    headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                         }
+                }) .then(response => response.json()).then(data =>{
+                    if(data.exists)
+                    {
+                        resultElement.textContent = 'Email already exists.';
+                        resultElement.style.color = 'red';
+                    }
+                    else{
+                        resultElement.textContent = 'Good to go.';
+                        resultElement.style.color = 'green';
+                    }
+                })
+
+             });
+
+    </script>
 
 </body>
 

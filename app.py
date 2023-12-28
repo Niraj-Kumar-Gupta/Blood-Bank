@@ -99,6 +99,15 @@ class contact_form(db.Model):
          return self.sno 
 
 
+@app.route('/check-email', methods=['POST'])
+def checkemail():
+    email = request.form.get('email')
+    existing_user = user.query.filter_by(email=email).first()
+    if existing_user:
+        response = {'exists': True}
+    else:
+          response = {'exists': False}    
+    return jsonify(response)
 
 
 @app.route("/register", methods=['GET','POST'])
