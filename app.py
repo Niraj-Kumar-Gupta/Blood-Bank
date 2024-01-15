@@ -9,11 +9,47 @@ from datetime import datetime
 from flask import jsonify
 from sqlalchemy import not_
 from werkzeug.security import generate_password_hash, check_password_hash 
+from flask_mail import Mail, Message
 
  
 # instance of flask application
 app = Flask(__name__)
+mail=Mail(app)  # instantiate the mail class 
 
+# -- smtp  start --- #
+
+ # configuration of mail 
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'placementttt576567@gmail.com'
+app.config['MAIL_PASSWORD'] = 'hjic jhny qncf rtlm'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+# configuration of mail
+
+# -- smtp config end --- #
+
+def send_email(receiver_email,username):
+   msg = Message( 
+                'Subject: Registration Successful - Thank You for Joining the Blood Bank',  #subject
+                sender ='placementttt576567@gmail.com', 
+                recipients = [receiver_email] 
+               ) 
+   # Set the body of the email
+   # Read the content of emailsample.txt and set it as the body of the email
+   with open('static/emailsample.txt', 'r') as file:
+     email_body = file.read().replace('{username}', username).replace('{receiver_email}', receiver_email)
+
+   msg.body = email_body
+   
+  # Send the email
+   try:
+        mail.send(msg)
+        return 'Email sent successfully'
+   except Exception as e:
+        # Handle exceptions, such as connection errors
+        return f'An error occurred: {str(e)}'
 
 
 
@@ -175,6 +211,8 @@ def register():
                         db.session.commit()
                     #    user_object = user.query.filter_by( username=username).first()
                         # login new user
+                        #send email to client
+                        send_email(email,first_name+" "+last_name)
                         return render_template("login.html", message="Registration succesfull !")
                     else:
                         return render_template("register.html", message="password length is too short")
