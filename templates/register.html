@@ -152,7 +152,7 @@
                         <span class="focus-input100"></span>
                        
                     </div>
-                    <p id="result"></p>
+                     <em id="result"></em>
 
                     <label class="container">Phone
                             </label>
@@ -184,9 +184,12 @@
                     </label>
                     <div class="wrap-input100 mb-2">
                         <!-- important !!! username -->
-                        <input class="input100" type="text" name="username">
+                        <input class="input100" type="text" name="username" id="username">
                         <span class="focus-input100"></span>
                     </div>
+                    <em id="user-result"></em>
+
+
                     <label class="container">Password
                     </label>
                     <div class="wrap-input100 mb-2">
@@ -296,6 +299,13 @@
     <script>
              const emailInput=document.querySelector('#email');
              const resultElement = document.getElementById('result');
+
+             const userInput=document.querySelector('#username');
+             const userElement = document.getElementById('user-result');
+
+
+
+
              emailInput.addEventListener('input',()=>{
 
                 const email = emailInput.value;
@@ -321,6 +331,34 @@
                 })
 
              });
+
+
+             userInput.addEventListener('input',()=>{
+
+                const username = userInput.value;
+
+                fetch('/check-username',{
+                    method:'POST',
+                    body: new URLSearchParams({ username }),
+                    headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                         }
+                }).then(response => response.json()).then(data=>{
+                    if(data.exists)
+                    {
+                        userElement.textContent = 'username already exists.';
+                        userElement.style.color = 'red';
+                    }
+                    else{
+                        userElement.textContent = 'Nice username.';
+                        userElement.style.color = 'green';
+                    }
+                })
+               
+      
+
+             });
+
 
     </script>
 

@@ -99,18 +99,18 @@
                 <!--End Title-->
                 <!--Inputs-->
                 <div class="wrap-input100 validate-input m-b-20" data-validate="Enter username or email">
-                    <input class="input100" type="text" name="username" placeholder="username or email">
+                    <input class="input100" type="text" name="username" placeholder="username">
                     <span class="focus-input100"></span>
                 </div>
                 <div class="wrap-input100 validate-input m-b-25" data-validate="Enter password">
-                    <input class="input100" type="password" name="password" placeholder="password">
+                    <input class="input100" type="password" name="password" id="myinput" placeholder="password">
                     <span class="focus-input100"></span>
                 </div>
                 <!--End Inputs-->
                 <!--Remember Me and Forgot Me-->
                 <div class="displayFlex justify-content-between">
                     <div class="rememberAndForget displayFlex mb-1">
-                        <input type="checkbox" id="RememberMe">
+                        <input type="checkbox" id="RememberMe" onclick="myfunctions()" >
                         <label class="container" id="rememberLabel">Remember me
 						</label>
                     </div>
@@ -181,6 +181,19 @@
          var myModal = new bootstrap.Modal(document.getElementById('myModal'));
           myModal.show();
         });
+
+      function myfunctions()
+        {
+            var x=document.getElementById("myinput");
+            if(x.type==="password")
+            {
+                x.type="text";
+            }
+            else{
+                x.type="password";
+            }
+
+        }
       </script>
 
 </body>

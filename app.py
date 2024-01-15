@@ -8,9 +8,13 @@ from flask_admin.contrib.sqla import ModelView
 from datetime import datetime
 from flask import jsonify
 from sqlalchemy import not_
+from werkzeug.security import generate_password_hash, check_password_hash 
+
  
 # instance of flask application
 app = Flask(__name__)
+
+
 
 
 # database
@@ -20,6 +24,9 @@ app.config['SESSION_TYPE'] = 'memcached'
 app.config['SECRET_KEY'] = 'BJHGTY%$#%$Y%^&YIHUGTY^&*((*)(&*^%FTYGUHJIKO))'
 
 db=SQLAlchemy(app)
+
+
+
 
 login = LoginManager(app)
 login.init_app(app)
@@ -39,7 +46,7 @@ class user(UserMixin,db.Model):
         phone_number = db.Column(db.Integer(),nullable=False)
         address = db.Column(db.String(1000), nullable=False)
         username = db.Column(db.String(50), nullable=False,unique=True)
-        password = db.Column(db.String(50),nullable=False)
+        password = db.Column(db.String(100000),nullable=False)
         gender = db.Column(db.String(100),nullable=False)
         blood = db.Column(db.String(100),nullable=False)
         date_created = db.Column(db.DateTime, default=datetime.now)
@@ -99,6 +106,11 @@ class contact_form(db.Model):
          return self.sno 
 
 
+
+############### database end  ##################
+
+
+
 @app.route('/check-email', methods=['POST'])
 def checkemail():
     email = request.form.get('email')
@@ -108,6 +120,18 @@ def checkemail():
     else:
           response = {'exists': False}    
     return jsonify(response)
+
+@app.route('/check-username', methods=['POST'])
+def checkusername():
+    username = request.form.get('username')
+    existing_user = user.query.filter_by(username=username).first()
+    if existing_user:
+        response = {'exists': True}
+    else:
+          response = {'exists': False}    
+    return jsonify(response)
+
+
 
 
 @app.route("/register", methods=['GET','POST'])
@@ -121,11 +145,13 @@ def register():
         phone_number = request.form['phone_number']
         address = request.form['address']
         username = request.form['username']
-        password = request.form['password']
+        plain_password = request.form['password']
         confirm_password = request.form['confirm_password']
         gender = request.form['gender'] 
         blood = request.form['blood']
          
+        
+        
          # checking if username already exists
         usr = user.query.filter_by(username=username).first()
         if usr:
@@ -135,10 +161,15 @@ def register():
             if eml:
                 return render_template("register.html", message="Email address Already exist")
             else:
-                if password == confirm_password:
-                    if len(password) > 5:
+                if plain_password == confirm_password:
+                    if len(plain_password) > 5:
+
+                        #  #hashing password
+
+                        hash_password = generate_password_hash(plain_password)
+                        print(hash_password)
                         usr = user(first_name=first_name,last_name=last_name, age=age,location=location,
-                                    email=email,phone_number=phone_number,address=address,username=username,password=password
+                                    email=email,phone_number=phone_number,address=address,username=username,password=hash_password
                                 ,gender=gender,blood=blood)
                         db.session.add(usr)  # adding user if not exists
                         db.session.commit()
@@ -159,20 +190,19 @@ def register():
 def login():
     if request.method == "POST":
         username = request.form['username']
-        password = request.form['password']
+        plain_password = request.form['password']
 
         # checking if username already exists
-        usr = user.query.filter_by(username=username,password=password).first()
+        usr = user.query.filter_by(username=username).first()
         if usr:
-            # user_object = user.query.filter_by( username=username).first()
-            # return render_template("profile.html",message=user_object)
-            login_user(usr)  # login that user
-            return redirect("/")
-        else:
-            usr = user.query.filter_by(username=username).first()
-            if usr:
+            hashed_password=usr.password
+            print(hashed_password)
+            if check_password_hash(hashed_password, plain_password):
+              login_user(usr)  # login that user
+              return redirect("/")
+            else:
               return render_template("login.html", message="Password Wrong!!")
-            else:  
+        else: 
               return render_template("login.html", message="No such user exists !!")    
     return render_template("login.html")
 
@@ -256,7 +286,7 @@ def contact_section():
 
 
     
-    
+
 
 # smtp mail protocol to send message #
 
@@ -463,3 +493,5 @@ def details_send1(request_id):
 
 if __name__ == '__main__': 
    app.run(debug=False,host="0.0.0.0",port="8000")
+   
+   
