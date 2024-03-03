@@ -313,6 +313,7 @@ input[type=number] {
     justify-content: center;
 }
 
+
 .nextBtn {
     box-sizing: content-box !important;
     margin-right: auto !important;
@@ -323,6 +324,10 @@ input[type=number] {
     line-height: 1.2;
     cursor: pointer;
 }
+.disabled {
+    pointer-events: none;
+    opacity: 0.3; /* Optional: Can be used to visually indicate disabled state */
+  }
 
 .login100-form-btn {
     display: -webkit-box;
@@ -351,6 +356,8 @@ input[type=number] {
     color: #da5552;
     border: 1px solid #da5552;
 }
+
+
 
 
 /*//////////////////////////////////////////////////////////////////

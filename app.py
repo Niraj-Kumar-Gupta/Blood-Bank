@@ -1,15 +1,19 @@
 
 # import flast module
-from flask import Flask, render_template, Response,request,redirect,url_for
+from flask import Flask, render_template, Response,request,redirect,flash,url_for, render_template_string
 from flask_login import LoginManager, UserMixin, login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
-from datetime import datetime
+from datetime import datetime,timedelta
 from flask import jsonify
 from sqlalchemy import not_
 from werkzeug.security import generate_password_hash, check_password_hash 
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message
+
+
+
 
  
 # instance of flask application
@@ -53,6 +57,23 @@ def send_email(receiver_email,username):
 
 
 
+def send_email_password_reset(receiver_email, reset_url):
+    msg = Message( 
+                'Subject:Urgent password reset !!',  #subject
+                sender ='placementttt576567@gmail.com', 
+                recipients = [receiver_email] 
+               ) 
+    msg.body = f"Please click on the link to reset your password: {reset_url}"
+    # Send the email
+    try:
+        mail.send(msg)
+        return 'Email sent successfully'
+    except Exception as e:
+        # Handle exceptions, such as connection errors
+        return f'An error occurred: {str(e)}'
+
+    
+
 # database
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///user.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -89,6 +110,11 @@ class user(UserMixin,db.Model):
 
         def get_id(self):
          return self.sno
+        def set_password(self, password):
+          self.password_hash = generate_password_hash(password)
+
+        def check_password(self, password):
+          return check_password_hash(self.password_hash, password)
         
 
 class newsletter(db.Model):
@@ -142,6 +168,15 @@ class contact_form(db.Model):
          return self.sno 
 
 
+class PasswordResetRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    token = db.Column(db.String(120), unique=True, nullable=False)
+    used = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<PasswordResetRequest {self.email}>'
 
 ############### database end  ##################
 
@@ -186,24 +221,15 @@ def register():
         gender = request.form['gender'] 
         blood = request.form['blood']
          
-        
-        
-         # checking if username already exists
-        usr = user.query.filter_by(username=username).first()
-        if usr:
-            return render_template("login.html", message="username already exists")
-        else:
-            eml = user.query.filter_by(email = email).first()
-            if eml:
+        eml = user.query.filter_by(email = email).first()
+        if eml:
                 return render_template("register.html", message="Email address Already exist")
-            else:
+        else:
                 if plain_password == confirm_password:
                     if len(plain_password) > 5:
 
                         #  #hashing password
-
                         hash_password = generate_password_hash(plain_password)
-                        print(hash_password)
                         usr = user(first_name=first_name,last_name=last_name, age=age,location=location,
                                     email=email,phone_number=phone_number,address=address,username=username,password=hash_password
                                 ,gender=gender,blood=blood)
@@ -234,7 +260,6 @@ def login():
         usr = user.query.filter_by(username=username).first()
         if usr:
             hashed_password=usr.password
-            print(hashed_password)
             if check_password_hash(hashed_password, plain_password):
               login_user(usr)  # login that user
               return redirect("/")
@@ -323,10 +348,6 @@ def contact_section():
     return render_template("contact.html")   
 
 
-    
-
-
-# smtp mail protocol to send message #
 
 @login_required
 @app.route('/newsletter', methods=['GET','POST'])
@@ -512,6 +533,7 @@ def accept_request_receiver(record_id):
         db.session.commit()
     return redirect('/display_request')
 
+
 @app.route('/details_send1/<int:request_id>', methods=['GET','POST'])
 def details_send1(request_id):
     if request.method == "POST": 
@@ -525,9 +547,58 @@ def details_send1(request_id):
          donar_database.flag=2
          receiver_database.flag=2
          db.session.commit()
-       print("Request ID:", request_id)
-       print("Donar Request:", select_request_1)
     return redirect('/display_request')
+
+## Reset password start ##
+
+# Serializer for generating and verifying tokens
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+@app.route('/forget_password', methods=['GET', 'POST'])
+def forget_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        usr = user.query.filter_by(email=email).first()
+        if usr:
+            token = serializer.dumps(email, salt='email-reset-salt')
+            reset_request = PasswordResetRequest(email=email, token=token, used=False)
+            db.session.add(reset_request)
+            db.session.commit()
+            reset_url = url_for('reset_with_token', token=token, _external=True)
+            send_email_password_reset(email, reset_url)
+            message = 'A password reset link has been sent to your email.'
+            return render_template('login.html',message=message)
+        else:
+            return 'Email not found in our system.'
+    return render_template('forget_password.html')
+
+@app.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_with_token(token):
+    reset_request = PasswordResetRequest.query.filter_by(token=token).first()
+    if not reset_request or reset_request.used:
+        return 'The reset link is invalid or has been used.'
+    try:
+        email = serializer.loads(token, salt='email-reset-salt', max_age=300)
+    except SignatureExpired:
+        return 'The reset link has expired.'    
+    except BadSignature:
+        return 'The reset link is invalid.'
+    if request.method == 'POST':
+        if email:
+            usr = user.query.filter_by(email=email).first()
+            if usr:
+                new_password = request.form['new-password']
+                hash_password = generate_password_hash(new_password)
+                usr.password = hash_password
+                reset_request.used = True
+                db.session.commit()
+                return 'Your password has been updated.'
+            else:
+                return 'User not found.'
+    return render_template('reset_new_password.html', token=token)
+
+
+
 
 if __name__ == '__main__': 
    app.run(debug=False,host="0.0.0.0",port="8000")

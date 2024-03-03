@@ -31,16 +31,30 @@ section {
 
 
 .dark{
-    background:linear-gradient(-90deg, #d1ae67 0%, #d47158 100%);
-    color: white !important;
+    background:rgba(6, 1, 33, 0.996);
+    color: rgb(220, 205, 205) !important;
 }
 .dark .change{
     cursor: pointer;
     border: 2px solid rgb(17, 255, 128);
 }
-.dark h1{
+.dark h2{
     /*background-color: #222;*/
-    color: white;
+    color: rgb(220, 205, 205) !important;
+}
+.dark a{
+    /*background-color: #222;*/
+    color: rgb(220, 205, 205) !important;
+}
+.dark h3{
+    /*background-color: #222;*/
+    color: rgb(220, 205, 205) !important;
+}
+.dark img{
+    
+    filter: drop-shadow(10px 10px 3px rgb(241, 105, 59));
+
+
 }
 /*<======end night mode======>*/
 

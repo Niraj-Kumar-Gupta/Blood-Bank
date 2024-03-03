@@ -75,10 +75,17 @@
 
             <form  method="POST" action="{{ url_for('register')}}"   class="login100-form validate-form">
                 <!--Title-->
+               
                 <span class="login100-form-title pb-2 pt-2">
 					Sign Up
                 </span>
                 <div id="personalPage">
+                    <div>
+                        <span class="nextBtn disabled">
+                            <i class="fa fa-arrow-left" style="font-size:36px"></i>
+                        </span>
+                        
+                    </div>
                     <div class="numberPage text-center">
                         <span>1</span>
                     </div>
@@ -137,6 +144,11 @@
                     </div>
                 </div>
                 <div id="contactPage">
+                    <div>
+                        <span class="nextBtn" onclick="backFirstPage()">
+                            <i class="fa fa-arrow-left" style="font-size:36px"></i>
+                        </span>
+                    </div>
                     <div class="numberPage text-center">
                         <span>2</span>
                     </div>
@@ -169,12 +181,17 @@
                         <span class="focus-input100"></span>
                     </div>
                     <div class="mt-5 text-center">
-                        <span class="nextBtn" onclick="goAccountPage()">
+                        <span class="nextBtn" id="nxt" onclick="goAccountPage()">
                                     Next
                                 </span>
                     </div>
                 </div>
                 <div id="accountPage">
+                    <div>
+                        <span class="nextBtn" onclick="goContactPage()">
+                            <i class="fa fa-arrow-left" style="font-size:36px"></i>
+                        </span>
+                    </div>
                     <div class="numberPage text-center">
                         <span>3</span>
                     </div>
@@ -194,25 +211,31 @@
                     </label>
                     <div class="wrap-input100 mb-2">
                          <!-- important !!! password -->
-                        <input class="input100" type="password" name="password">
+                        <input class="input100" id="pass" type="password" name="password">
                         <span class="focus-input100"></span>
                     </div>
                     <label class="container">Rewrite password
                     </label>
                     <div class="wrap-input100 mb-2">
                         <!-- important !!!confirm  password -->
-                        <input class="input100" type="password" name="confirm_password">
+                        <input class="input100" id="confirm-pass" type="password" name="confirm_password">
                         <span class="focus-input100"></span>
                     </div>
+                    <em id="pass-result"></em>
                     <!--Login Button-->
                     <div class="mt-5 text-center">
-                        <span class="nextBtn" onclick="goMedicalPage()">
+                        <span class="nextBtn" id="nxt1" onclick="goMedicalPage()">
                             Next
                         </span>
                     </div>
                 </div>
 
                 <div id="medicalPage">
+                    <div>
+                        <span class="nextBtn" onclick="backLastPage()">
+                            <i class="fa fa-arrow-left" style="font-size:36px"></i>
+                        </span>
+                    </div>
                     <div class="numberPage text-center">
                         <span>4</span>
                     </div>
@@ -295,72 +318,6 @@
     <script src="./static/js/main.js"></script>
     <script src="./static/js/login.js"></script>
 
-
-    <script>
-             const emailInput=document.querySelector('#email');
-             const resultElement = document.getElementById('result');
-
-             const userInput=document.querySelector('#username');
-             const userElement = document.getElementById('user-result');
-
-
-
-
-             emailInput.addEventListener('input',()=>{
-
-                const email = emailInput.value;
-                // ---- fetch syntx ---
-                // fetch( 'req', {res}.then(response => response.json()).then(data => {...}) )
-
-                fetch('/check-email',{
-                    method: 'POST',
-                    body: new URLSearchParams({ email }),
-                    headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                         }
-                }) .then(response => response.json()).then(data =>{
-                    if(data.exists)
-                    {
-                        resultElement.textContent = 'Email already exists.';
-                        resultElement.style.color = 'red';
-                    }
-                    else{
-                        resultElement.textContent = 'Good to go.';
-                        resultElement.style.color = 'green';
-                    }
-                })
-
-             });
-
-
-             userInput.addEventListener('input',()=>{
-
-                const username = userInput.value;
-
-                fetch('/check-username',{
-                    method:'POST',
-                    body: new URLSearchParams({ username }),
-                    headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                         }
-                }).then(response => response.json()).then(data=>{
-                    if(data.exists)
-                    {
-                        userElement.textContent = 'username already exists.';
-                        userElement.style.color = 'red';
-                    }
-                    else{
-                        userElement.textContent = 'Nice username.';
-                        userElement.style.color = 'green';
-                    }
-                })
-               
-      
-
-             });
-
-
-    </script>
 
 </body>
 

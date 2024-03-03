@@ -392,16 +392,19 @@ button:hover {
     padding-left: 0.2rem !important;
 }
 
-#forgetPass {
+#forgetPass1 {
     font-size: 0.9rem;
-    color: #666666;
+    color: #9b1414;
     padding-top: 0.2rem;
     transition: color 0s 0s;
 }
+.forget-pass{
+    color: #c82929;
+}
 
-#forgetPass:hover {
+#forgetPass1:hover {
     cursor: pointer;
-    color: #ea4335;
+    color: #83221a;
 }
 
 
