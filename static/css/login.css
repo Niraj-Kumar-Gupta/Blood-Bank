@@ -458,7 +458,11 @@ button:hover {
     color: white !important;
 }
 
-
+.person_details{
+    width: 100px;
+    height: 100px;
+    background-color: #1da1f2;
+}
 /*//////////////////////////////////////////////////////////////////
 [ Responsive ]*/
 

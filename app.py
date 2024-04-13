@@ -126,6 +126,7 @@ class newsletter(db.Model):
 
 class blood_donate(db.Model):
         sno = db.Column(db.Integer, primary_key=True)
+        userId = db.Column(db.Integer, nullable=False)
         first_name = db.Column(db.String(50), nullable=False)
         last_name = db.Column(db.String(50), nullable=False)
         blood = db.Column(db.String(100),nullable=False)
@@ -144,6 +145,7 @@ class blood_donate(db.Model):
 
 class blood_request(db.Model): 
     sno = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer, nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     blood = db.Column(db.String(100),nullable=False)
@@ -365,7 +367,7 @@ def news_letter():
 def request_b():
     user= load_user(current_user.get_id())
     if user:
-        req = blood_request.query.filter_by( first_name=user.first_name,email=user.email ).first()
+        req = blood_request.query.filter_by(userId = user.sno ).first()
         if req:
             flag = req.flag
             det=req.address_details
@@ -391,7 +393,7 @@ def blood_request1():
                 number = request.form['number']
                 location = request.form['location']
                 address_details=0
-                req = blood_request(first_name=first_name,last_name=last_name,blood=blood,
+                req = blood_request(userId = user.sno,first_name=first_name,last_name=last_name,blood=blood,
                         email=email,number=number,location=location,address_details=address_details)
                 db.session.add(req)  # adding user if not exists
                 db.session.commit()
@@ -407,7 +409,7 @@ def blood_request1():
 def donate():
    user= load_user(current_user.get_id())
    if user:
-        req = blood_donate.query.filter_by( first_name=user.first_name,email=user.email ).first()
+        req = blood_donate.query.filter_by( userId = user.sno ).first()
         if req:
             flag = req.flag
             det=req.address_details
@@ -432,15 +434,14 @@ def donate_blood():
                 number = request.form['number']
                 location = request.form['location']
                 address_details=0
-
-                donate = blood_donate(first_name=first_name,last_name=last_name,blood=blood,dob=dob,
+                donate = blood_donate(userId=user.sno,first_name=first_name,last_name=last_name,blood=blood,dob=dob,
                         email=email,number=number,location=location,address_details=address_details)
                 db.session.add(donate)  # adding user if not exists
                 db.session.commit()
                 req = blood_donate.query.filter_by( first_name=first_name,email=email).first()
                 if req:
                  return redirect("/donate")
-        
+   return render_template("donate.html",exist=False,usr=user)    
  
 @login_required
 @app.route('/notification')
@@ -448,7 +449,7 @@ def notify():
     return render_template("notification.html",users=blood_donate)
   
 
-@app.route('/adminl')
+@app.route('/sub_admin')
 def admin_login():
       # Fetch all blood donation records from the database
     return render_template("admin.html")

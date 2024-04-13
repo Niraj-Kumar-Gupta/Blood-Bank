@@ -138,24 +138,31 @@
 
                             
   <!--------------------------- ## Donar request form --------------------------->
-                            {% if exist %}
+                            1{% if exist %}
                                    
                             <div>   
                               {% if accept %}
                               <h4 style="color: rgb(190, 37, 14); padding-bottom: 5px;">Congratulation !!</h4>
                                <div class="alert alert-success">
                                 <strong>Success!</strong> Your request has been Approved.<a href="#" class="alert-link">You are eligible for blood donation !!</a>.
-                                
                               </div>
-                              <div>
-                                <h3>Blood Donar Contact details</h3>
-                                {% if details%}
-                                <h4>{{details.first_name}}</h4>
-                                <h4>{{details.location}}</h4>
-                                {% else %}
-                                <h4> update soon !!</h4>
-                                {% endif %}
-                            </div>
+                              
+                                <h3 style="color: rgb(190, 37, 14); padding-bottom: 5px; font-weight: 700;">Blood Donar Contact details</h3>
+                                <div class="alert alert-info" role="alert">
+                                    {% if details%}
+                                    <h1 class="badge badge-dark">FullName:<h1 class="badge badge-danger">{{details.first_name}}&nbsp;{{details.last_name}}</h1></h1>&nbsp;&nbsp;
+                                    <h1 class="badge badge-dark">Blood Type:<h1 class="badge badge-danger">{{details.blood}}</h1></h1>&nbsp;&nbsp;
+                                    <h1 class="badge badge-dark">Location:<h1 class="badge badge-danger">{{details.location}}</h1></h1>&nbsp;&nbsp;
+                                    <h1 class="badge badge-dark">Phone No:<h1 class="badge badge-danger">{{details.number}}</h1></h1>&nbsp;&nbsp;
+                                    <h1 class="badge badge-dark">Email Address:<h1 class="badge badge-danger">{{details.email}}</h1></h1>
+                                    </div>
+                                      <button type="button" class="btn btn-primary">
+                                        Again Request
+                                      </button>
+                                    {% else %}
+                                    <h1 class="badge badge-dark">Status:<h1 class="badge badge-danger">update soon.... !!</h1></h1>
+                                    {%endif%}
+                           
                               {% else %}
                               <h4 style="color: rgb(195, 20, 20); padding-bottom: 5px;">You have successfully submitted this response.</h4>
                               <div class="alert alert-danger">
