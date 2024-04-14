@@ -11,6 +11,7 @@ from sqlalchemy import not_
 from werkzeug.security import generate_password_hash, check_password_hash 
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message
+from sqlalchemy import or_
 
 
 
@@ -252,24 +253,28 @@ def register():
 
 
 
+from flask import render_template
+
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == "POST":
-        username = request.form['username']
+        username_or_email = request.form['username']
         plain_password = request.form['password']
 
-        # checking if username already exists
-        usr = user.query.filter_by(username=username).first()
+        # checking if username or email exists
+        usr = user.query.filter(or_(user.username == username_or_email, user.email == username_or_email)).first()
+        
         if usr:
-            hashed_password=usr.password
+            hashed_password = usr.password
             if check_password_hash(hashed_password, plain_password):
-              login_user(usr)  # login that user
-              return redirect("/")
+                login_user(usr)  # login that user
+                return redirect("/")
             else:
-              return render_template("login.html", message="Password Wrong!!")
+                return render_template("login.html", message="Password Wrong!!")
         else: 
-              return render_template("login.html", message="No such user exists !!")    
+            return render_template("login.html", message="No such user exists !!")    
     return render_template("login.html")
+
 
 
 #profile section ##
