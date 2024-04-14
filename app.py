@@ -506,11 +506,12 @@ def details_send(donar_id):
          receiver_database= blood_request.query.get(select_request_1)
          donar_database.address_details=select_request_1
          receiver_database.address_details=donar_id
-         donar_database.flag=2
-         receiver_database.flag=2
-         db.session.commit()
-       print("Donor ID:", donar_id)
-       print("Selected Request:", select_request_1)
+         if donar_database.userId != receiver_database.userId:
+            donar_database.flag=2
+            receiver_database.flag=2
+            db.session.commit()  
+         else:
+            return "donar and receiver are same person"    
     return redirect('/display_donar')
        
     
@@ -545,9 +546,12 @@ def details_send1(request_id):
          receiver_database= blood_request.query.get(request_id)
          donar_database.address_details=request_id
          receiver_database.address_details=select_request_1
-         donar_database.flag=2
-         receiver_database.flag=2
-         db.session.commit()
+         if donar_database.userId != receiver_database.userId:
+            donar_database.flag=2
+            receiver_database.flag=2
+            db.session.commit()
+         else:
+            return "donar and receiver are same person"
     return redirect('/display_request')
 
 ## Reset password start ##

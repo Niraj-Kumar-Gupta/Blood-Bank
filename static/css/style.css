@@ -7,6 +7,7 @@
 html {
     font-family: sans-serif;
     line-height: 1.15;
+    overflow-x: hidden;
 }
 
 @-ms-viewport {
@@ -31,7 +32,7 @@ section {
 
 
 .dark{
-    background:rgba(6, 1, 33, 0.996);
+    background:linear-gradient(rgb(36, 49, 12),rgb(19, 4, 45));
     color: rgb(220, 205, 205) !important;
 }
 .dark .change{
@@ -67,6 +68,7 @@ body {
     color: #212529;
     text-align: left;
     background:linear-gradient(-90deg, #f0ede4 0%, #f39e8b 100%);
+   
     
 }
 
